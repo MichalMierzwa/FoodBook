@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>splash.jpg</file>
+        <file>Calendar.png</file>
+        <file>configure.gif</file>
+        <file>quiticon.gif</file>
+        <file>Menu.jpg</file>
+    </qresource>
+</RCC>
