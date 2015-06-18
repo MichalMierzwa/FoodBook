@@ -169,7 +169,7 @@
      <enum>QFrame::Box</enum>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="label_3">
@@ -264,6 +264,9 @@
         <height>200</height>
        </size>
       </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -331,6 +334,15 @@
         <width>200</width>
         <height>200</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #E0E0E0, stop: 1 #FFFFFF);
+
+</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="text">
        <string/>
@@ -517,6 +529,38 @@
       </property>
       <property name="text">
        <string>Usuń przepis</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_EditRecipe">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>430</y>
+        <width>141</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Edytuj przepis</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_EditRecipe">
+      <property name="geometry">
+       <rect>
+        <x>630</x>
+        <y>390</y>
+        <width>141</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="placeholderText">
+       <string>Numer Przepisu</string>
       </property>
      </widget>
     </widget>

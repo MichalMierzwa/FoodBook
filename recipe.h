@@ -57,6 +57,7 @@ private:
     int ingredientCounter;
     int prepareTimeHr;
     int prepareTimeMin;
+
 };
 Q_DECLARE_METATYPE(recipe)
 

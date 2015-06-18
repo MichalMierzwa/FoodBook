@@ -60,6 +60,10 @@ private slots:
 
     void setDefaultStyleSheet();
 
+    void EditButtonActivation();
+
+    void on_pushButton_EditRecipe_released();
+
 private:
     QList<recipe> ListaPrzepisow;
 

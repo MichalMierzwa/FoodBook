@@ -794,8 +794,8 @@ void MainWindow::on_pushButton_EditRecipe_released()
     QSettings mySettings("MichaU", "FoodBook");
     mySettings.beginGroup("All Recipes");
 
+    //Conversion from QVariant to custom object, 'recipe' type
     QString RecName = QString(ui->tableWidget->item(ui->lineEdit_EditRecipe->text().toInt(), 0)->text());
-
     QVariant value = mySettings.value(RecName);
     recipe rec = value.value<recipe>();
 
