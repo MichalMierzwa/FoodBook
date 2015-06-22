@@ -35,7 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //Removes the red fields on page2 when user corrects his choice
     connect(ui->lineEdit, SIGNAL(textChanged(QString)), this, SLOT(setDefaultStyleSheet()));
     connect(ui->CategoryComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setDefaultStyleSheet()));
-    connect(ui->listWidget, SIGNAL(indexesMoved(QModelIndexList)),this, SLOT(setDefaultStyleSheet()));
+    //connect(ui->listWidget, SIGNAL(indexesMoved(QModelIndexList)),this, SLOT(setDefaultStyleSheet()));
+    connect(ui->PickComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(setDefaultStyleSheet()));
 
     connect(ui->lineEdit_EditRecipe, SIGNAL(textChanged(QString)), this, SLOT(EditButtonActivation()));
 
@@ -66,15 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //    settings.endGroup();
     // ================================================================================================
     // ================================================================================================
-
-ui->label->setStyleSheet("border-radius: 30px;");
-
-
-
-
-
-
-
 
 
 
@@ -771,9 +763,10 @@ void MainWindow::setDefaultStyleSheet()
     {
         ui->CategoryComboBox->setStyleSheet("");
     }
-    ui->PickComboBox->setStyleSheet("");
+
     if(ui->listWidget->count() != 0)
     {
+        ui->PickComboBox->setStyleSheet("");
 
     }
 
@@ -794,8 +787,8 @@ void MainWindow::on_pushButton_EditRecipe_released()
     QSettings mySettings("MichaU", "FoodBook");
     mySettings.beginGroup("All Recipes");
 
+    //Conversion from QVariant to custom object, 'recipe' type
     QString RecName = QString(ui->tableWidget->item(ui->lineEdit_EditRecipe->text().toInt(), 0)->text());
-
     QVariant value = mySettings.value(RecName);
     recipe rec = value.value<recipe>();
 
