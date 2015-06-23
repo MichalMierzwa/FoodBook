@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include <QMetaType>
 #include <QVariant>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,13 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     //Removes the red fields on page2 when user corrects his choice
     connect(ui->lineEdit, SIGNAL(textChanged(QString)), this, SLOT(setDefaultStyleSheet()));
     connect(ui->CategoryComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setDefaultStyleSheet()));
-    //connect(ui->listWidget, SIGNAL(indexesMoved(QModelIndexList)),this, SLOT(setDefaultStyleSheet()));
-    connect(ui->PickComboBox, SIGNAL(currentTextChanged(QString)), this, SLOT(setDefaultStyleSheet()));
+    //NOT NEEDED, added setDefaultStyleSheet under PickCombobox->Activated() SLOT
+    //connect(ui->PickComboBox, SIGNAL(activated(QString)), this, SLOT(setDefaultStyleSheet()));
 
+    //Filled lineEdit_Edit activates button
     connect(ui->lineEdit_EditRecipe, SIGNAL(textChanged(QString)), this, SLOT(EditButtonActivation()));
 
 // ---------------------------------------------PLAYGROUND---------------------------------------------
-
 
     // ========================= DZIAŁAJĄCE QVARIANT CUSTOM OBJECT DO QSETTINGS!!! ====================
     // ================================================================================================
@@ -70,9 +71,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
+
+
+
+
+
+
+
+
+
+
 // ======================================================================================
-
-
 
     // SETTING THE TIMER
     QTimer *timer = new QTimer(this);
@@ -526,6 +535,7 @@ void MainWindow::on_PickComboBox_activated(const QString &arg1)
           ui->PickComboBox->insertItem(0, "Wybierz składnik");
     }
     ui->PickComboBox->setCurrentIndex(0);
+    setDefaultStyleSheet();
 }
 
 void MainWindow::on_CategoryComboBox_activated(const QString &arg1)
@@ -764,12 +774,10 @@ void MainWindow::setDefaultStyleSheet()
         ui->CategoryComboBox->setStyleSheet("");
     }
 
-    if(ui->listWidget->count() != 0)
+    if(ui->listWidget->count() == 0 && ui->PickComboBox->styleSheet() != QString(""))
     {
         ui->PickComboBox->setStyleSheet("");
-
     }
-
 }
 
 // is lineEdit to edit recipe Empty - disables/enables Edit button
@@ -784,33 +792,41 @@ void MainWindow::EditButtonActivation()
 
 void MainWindow::on_pushButton_EditRecipe_released()
 {
-    QSettings mySettings("MichaU", "FoodBook");
-    mySettings.beginGroup("All Recipes");
+    if(ui->lineEdit_EditRecipe->text().toInt() > ui->tableWidget->rowCount() || ui->lineEdit_EditRecipe->text().toInt() <= 0)
+    {
+        QMessageBox *MsgBox = new QMessageBox();
+        MsgBox->setText("Wpisz numer przepisu dostępny w tabeli");
+        MsgBox->exec();
+    }
+    if(ui->lineEdit_EditRecipe->text().toInt() <= ui->tableWidget->rowCount() && ui->lineEdit_EditRecipe->text().toInt() > 0)
+    {
+        QSettings mySettings("MichaU", "FoodBook");
+        mySettings.beginGroup("All Recipes");
 
-    //Conversion from QVariant to custom object, 'recipe' type
-    QString RecName = QString(ui->tableWidget->item(ui->lineEdit_EditRecipe->text().toInt(), 0)->text());
-    QVariant value = mySettings.value(RecName);
-    recipe rec = value.value<recipe>();
+        //Conversion from QVariant to custom object, 'recipe' type
+        QString RecName = QString(ui->tableWidget->item(ui->lineEdit_EditRecipe->text().toInt()-1, 0)->text());
+        QVariant value = mySettings.value(RecName);
+        recipe rec = value.value<recipe>();
 
-    ui->lineEdit->setText(rec.Name());
-    ui->lineEdit_Source->setText(rec.SourceName());
-    ui->textEdit->setText(rec.Description());
-    ui->lineEdit_Portion->setText(QString::number(rec.PortionNumber()));
-    ui->labelPickedCategory->setText(rec.Category());
-    ui->lineEditTimeHr->setText(QString::number(rec.PrepareTimeHr()));
-    ui->lineEditTimeMin->setText(QString::number(rec.PrepareTimeMin()));
+        ui->lineEdit->setText(rec.Name());
+        ui->lineEdit_Source->setText(rec.SourceName());
+        ui->textEdit->setText(rec.Description());
+        ui->lineEdit_Portion->setText(QString::number(rec.PortionNumber()));
+        ui->labelPickedCategory->setText(rec.Category());
+        ui->lineEditTimeHr->setText(QString::number(rec.PrepareTimeHr()));
+        ui->lineEditTimeMin->setText(QString::number(rec.PrepareTimeMin()));
 
-    mySettings.endGroup();
+    //    przepis.setIngredientCounter(ui->listWidget->count());
 
-//    przepis.setIngredientCounter(ui->listWidget->count());
+    //    for (int i = 0; i < ui->listWidget->count(); i++)
+    //    {
+    //        QList<QDoubleSpinBox*> SpinBoxList = this->findChildren<QDoubleSpinBox *> ();
 
-//    for (int i = 0; i < ui->listWidget->count(); i++)
-//    {
-//        QList<QDoubleSpinBox*> SpinBoxList = this->findChildren<QDoubleSpinBox *> ();
-
-//        przepis.IngredientList.append(ui->listWidget->item(i)->text());
-//        przepis.IngredientCountList.append(SpinBoxList.at(i)->text().toInt());
-//    }
-    ui->stackedWidget->setCurrentIndex(2);
+    //        przepis.IngredientList.append(ui->listWidget->item(i)->text());
+    //        przepis.IngredientCountList.append(SpinBoxList.at(i)->text().toInt());
+    //    }
+        mySettings.endGroup();
+        ui->stackedWidget->setCurrentIndex(2);
+    }
     ui->lineEdit_EditRecipe->clear();
 }
